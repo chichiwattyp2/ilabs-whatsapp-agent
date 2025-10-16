@@ -1,0 +1,45 @@
+// lib/xeroIntegration.ts
+// Stub version - Xero integration disabled for now
+// To enable: npm install xero-node@latest and replace this file
+
+interface InvoiceSearchParams {
+  businessName: string;
+  date?: string;
+  dateRange?: { from: string; to: string };
+}
+
+interface Invoice {
+  invoiceID: string;
+  invoiceNumber: string;
+  contact: string;
+  date: string;
+  total: number;
+  amountDue: number;
+  status: string;
+}
+
+export async function searchXeroInvoice(params: InvoiceSearchParams): Promise<Invoice[]> {
+  console.log('Xero integration not configured. Install xero-node to enable invoice features.');
+  
+  // Return mock data for testing
+  return [
+    {
+      invoiceID: 'mock-123',
+      invoiceNumber: 'INV-001',
+      contact: params.businessName,
+      date: new Date().toISOString(),
+      total: 100.00,
+      amountDue: 100.00,
+      status: 'DRAFT',
+    }
+  ];
+}
+
+export async function getInvoicePDF(invoiceId: string): Promise<Buffer> {
+  console.log('Xero integration not configured. Install xero-node to enable invoice features.');
+  throw new Error('Xero integration not available. Please install xero-node package.');
+}
+
+export async function storeTokenSet(tokenSet: any) {
+  console.log('Xero token storage not implemented');
+}

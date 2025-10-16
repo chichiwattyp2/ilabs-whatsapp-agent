@@ -1,0 +1,162 @@
+// prisma/schema.prisma
+// This is your Prisma schema file for production database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Main conversation tracking
+model Conversation {
+  id              String    @id @default(cuid())
+  phoneNumber     String    @unique
+  customerName    String?
+  controlMode     ControlMode @default(AI)
+  needsReview     Boolean   @default(false)
+  reviewReason    String?
+  lastMessage     String?
+  lastMessageTime DateTime  @default(now())
+  messageCount    Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  messages        Message[]
+  
+  @@index([phoneNumber])
+  @@index([lastMessageTime])
+  @@index([controlMode])
+}
+
+enum ControlMode {
+  AI
+  MANUAL
+}
+
+// Individual messages
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  role           MessageRole
+  content        String       @db.Text
+  messageType    String?      // text, image, document, etc.
+  metadata       Json?        // Store additional data (attachments, etc.)
+  
+  timestamp      DateTime     @default(now())
+  
+  @@index([conversationId])
+  @@index([timestamp])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+// Invoice tracking
+model InvoiceRequest {
+  id             String   @id @default(cuid())
+  phoneNumber    String
+  businessName   String
+  requestedDate  String
+  invoiceId      String?
+  invoiceNumber  String?
+  status         InvoiceStatus @default(PENDING)
+  errorMessage   String?
+  
+  createdAt      DateTime @default(now())
+  processedAt    DateTime?
+  
+  @@index([phoneNumber])
+  @@index([status])
+}
+
+enum InvoiceStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+// Manual override history
+model OverrideLog {
+  id             String   @id @default(cuid())
+  phoneNumber    String
+  action         OverrideAction
+  triggeredBy    String?  // Who triggered it (admin email, etc.)
+  reason         String?
+  
+  timestamp      DateTime @default(now())
+  
+  @@index([phoneNumber])
+  @@index([timestamp])
+}
+
+enum OverrideAction {
+  TAKEOVER
+  RESUME
+}
+
+// Review flags and resolution tracking
+model ReviewFlag {
+  id             String   @id @default(cuid())
+  phoneNumber    String
+  reason         String
+  triggerMessage String   @db.Text
+  resolved       Boolean  @default(false)
+  resolvedBy     String?
+  resolutionNote String?
+  
+  createdAt      DateTime @default(now())
+  resolvedAt     DateTime?
+  
+  @@index([phoneNumber])
+  @@index([resolved])
+  @@index([createdAt])
+}
+
+// System logs for debugging
+model SystemLog {
+  id             String   @id @default(cuid())
+  level          LogLevel
+  service        String
+  message        String   @db.Text
+  metadata       Json?
+  
+  timestamp      DateTime @default(now())
+  
+  @@index([level])
+  @@index([timestamp])
+}
+
+enum LogLevel {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+// Usage tracking for costs
+model ApiUsage {
+  id             String   @id @default(cuid())
+  service        ApiService
+  endpoint       String?
+  tokens         Int?     // For Claude
+  cost           Float?
+  phoneNumber    String?
+  
+  timestamp      DateTime @default(now())
+  
+  @@index([service])
+  @@index([timestamp])
+}
+
+enum ApiService {
+  ANTHROPIC
+  WHATSAPP
+  XERO
+}
