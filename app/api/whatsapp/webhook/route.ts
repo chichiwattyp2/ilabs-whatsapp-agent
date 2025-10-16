@@ -49,17 +49,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }
-```
-
-## 📁 Your File Structure Should Be:
-```
-app/api/
-├── conversations/
-│   └── route.ts          ← Only conversations code
-├── health/
-│   └── route.ts          ← Only health code
-├── override/
-│   └── route.ts          ← Only override code
-└── whatsapp/
-    └── webhook/
-        └── route.ts      ← Only webhook code
