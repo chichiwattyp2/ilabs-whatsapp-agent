@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { AlertCircle, Phone, MessageSquare, Pause, Play, Clock, CheckCircle } from 'lucide-react';
+'use client';
 
+import React, { useState, useEffect } from 'react';
+import { AlertCircle, Phone, MessageSquare, Pause, Play, Clock } from 'lucide-react';
+
+// Add this interface
 interface Conversation {
   phoneNumber: string;
   customerName?: string;
