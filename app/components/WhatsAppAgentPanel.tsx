@@ -37,7 +37,7 @@ export default function WhatsAppAgentPanel() {
     }
   };
 
-  const toggleControl = async (phoneNumber, currentStatus) => {
+  const toggleControl = async (phoneNumber: string, currentStatus: string) => {
     setLoading(true);
     try {
       await fetch('/api/override', {
