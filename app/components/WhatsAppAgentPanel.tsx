@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Phone, MessageSquare, Pause, Play, Clock, CheckCircle } from 'lucide-react';
 
+interface Conversation {
+  phoneNumber: string;
+  customerName?: string;
+  controlMode: string;
+  needsReview: boolean;
+  reviewReason?: string;
+  lastMessage: string;
+  lastMessageTime: string;
+  messageCount: number;
+}
+
 export default function WhatsAppAgentPanel() {
-  const [conversations, setConversations] = useState([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);  // ← Add type here
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
