@@ -60,12 +60,12 @@ export async function handleIncomingMessageEnhanced(data: IncomingMessageEnhance
       });
       
       // Notify owner
-      await notifyReviewNeeded(
-        phoneNumber,
-        senderName || conversationState.customerName,
-        reviewCheck.reason,
-        message
-      );
+  await notifyReviewNeeded(
+  phoneNumber,
+  senderName || conversationState.customerName,
+  reviewCheck.reason || 'Unknown reason',  
+  message
+);
     }
 
     // Check if this is an invoice request that needs more details
