@@ -1,15 +1,11 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, Phone, MessageSquare, Pause, Play, Clock } from 'lucide-react';
+import { AlertCircle, Phone, MessageSquare, Pause, Play, Clock, CheckCircle } from 'lucide-react';
 
 export default function WhatsAppAgentPanel() {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
-
-  // ... rest of your code
 
   useEffect(() => {
     if (authenticated) {
